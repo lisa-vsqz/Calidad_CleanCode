@@ -12,19 +12,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Compilando el código Java...'
-                // Compila todos los archivos .java en src y coloca los .class en la carpeta bin
+                // Busca y compila todos los archivos .java dentro de la carpeta com/
                 bat '''
                 if not exist bin mkdir bin
-                javac -d bin src\\*.java
+                javac -d bin com\\example\\manager\\*.java
                 '''
             }
         }
 
-        stage('Test') {
+        stage('Run') {
             steps {
-                echo 'Ejecutando pruebas (si existen)...'
-                // Ejecuta la clase principal, ajusta el nombre si tu clase principal no se llama Main
-                bat 'java -cp bin Main'
+                echo 'Ejecutando el programa principal...'
+                // Ejecuta la clase principal con su paquete completo
+                bat 'java -cp bin com.example.manager.CustomerOrderManager'
             }
         }
     }
