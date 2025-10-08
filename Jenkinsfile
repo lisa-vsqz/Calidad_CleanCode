@@ -12,25 +12,29 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Compilando el código Java...'
-                sh 'mkdir -p build'
-                sh 'javac -d build src/main/java/com/example/manager/CustomerOrderManager.java'
+                // Compila todos los archivos .java en src y coloca los .class en la carpeta bin
+                bat '''
+                if not exist bin mkdir bin
+                javac -d bin src\\*.java
+                '''
             }
         }
 
-        stage('Run') {
+        stage('Test') {
             steps {
-                echo 'Ejecutando la aplicación...'
-                sh 'java -cp build com.example.manager.CustomerOrderManager'
+                echo 'Ejecutando pruebas (si existen)...'
+                // Ejecuta la clase principal, ajusta el nombre si tu clase principal no se llama Main
+                bat 'java -cp bin Main'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline ejecutado correctamente.'
+            echo 'Pipeline completado exitosamente.'
         }
         failure {
-            echo 'Hubo un error en la ejecución del pipeline.'
+            echo 'Error durante la ejecución del pipeline.'
         }
     }
 }
